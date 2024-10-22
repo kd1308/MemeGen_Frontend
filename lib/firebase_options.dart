@@ -47,7 +47,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDhqgcO-CuuXTs2n5LBJYVPKvnIGykDJAA',
+    apiKey: 'AIzaSyBu-clgzLX1ctZVKQGFlQTn-0esbHMuwCU',
     appId: '1:290016369962:web:145a3c0ffd88032df85253',
     messagingSenderId: '290016369962',
     projectId: 'memegen-bbf32',
@@ -57,15 +57,15 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDhGSyjJEdK0xehQvE201CCOdJNz895Cp0',
-    appId: '1:290016369962:android:97f1991a1fe4bfb1f85253',
-    messagingSenderId: '290016369962',
-    projectId: 'memegen-bbf32',
-    storageBucket: 'memegen-bbf32.appspot.com',
+    apiKey: 'AIzaSyBu-clgzLX1ctZVKQGFlQTn-0esbHMuwCU',
+    appId: '1:508219930254:android:5fec02bfc0d94b88013bdf',
+    messagingSenderId: '508219930254',
+    projectId: 'memegenfrontend',
+    storageBucket: 'memegenfrontend.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA8SJW1gVUwY3-6oCFu-xG-pELSkxer0jw',
+    apiKey: 'AIzaSyBu-clgzLX1ctZVKQGFlQTn-0esbHMuwCU',
     appId: '1:290016369962:ios:45e972388e223954f85253',
     messagingSenderId: '290016369962',
     projectId: 'memegen-bbf32',

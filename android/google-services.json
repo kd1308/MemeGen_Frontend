@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "508219930254",
+    "project_id": "memegenfrontend",
+    "storage_bucket": "memegenfrontend.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508219930254:android:5fec02bfc0d94b88013bdf",
+        "android_client_info": {
+          "package_name": "com.example.meme_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu-clgzLX1ctZVKQGFlQTn-0esbHMuwCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
