@@ -14,32 +14,36 @@ class MemeApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MemeGeneratorPage(),
+      home: JokeSearchScreen(),
     );
   }
 }
 
-class MemeGeneratorPage extends StatefulWidget {
+class JokeSearchScreen extends StatefulWidget {
   @override
-  _MemeGeneratorPageState createState() => _MemeGeneratorPageState();
+  _JokeSearchScreenState createState() => _JokeSearchScreenState();
 }
 
-class _MemeGeneratorPageState extends State<MemeGeneratorPage> {
-  final TextEditingController _controller = TextEditingController();
-  List<dynamic> _memes = [];
+class _JokeSearchScreenState extends State<JokeSearchScreen> {
+  TextEditingController _controller = TextEditingController();
+  List<String> _memes = []; // Change to List<String> for clarity
+  String? _question; // To store the question from the response
 
-  Future<void> _generateMemes(String topic) async {
+  Future<void> fetchJokes(String query) async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/api/generate_memes/?input_text=$topic'),
+      Uri.parse('http://10.0.2.2:8000/get_memes/?query=$query'),
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = json.decode(response.body);
       setState(() {
-        _memes = data;
+        // Convert dynamically typed list to List<String>
+        _memes = List<String>.from(
+            data['suggestions'].map((item) => item.toString()));
+        _question = data['question']; // Store the question from the response
       });
     } else {
-      throw Exception('Failed to load memes');
+      throw Exception('Failed to load jokes');
     }
   }
 
@@ -47,7 +51,7 @@ class _MemeGeneratorPageState extends State<MemeGeneratorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meme Generator'),
+        title: Text('Joke Search'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -56,34 +60,31 @@ class _MemeGeneratorPageState extends State<MemeGeneratorPage> {
             TextField(
               controller: _controller,
               decoration: InputDecoration(
-                labelText: 'Enter a topic',
+                labelText: 'Enter your query',
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                if (_controller.text.isNotEmpty) {
-                  _generateMemes(_controller.text);
-                }
+                fetchJokes(_controller.text);
               },
-              child: Text('Generate Memes'),
+              child: Text('Get Jokes'),
             ),
+            SizedBox(height: 16),
+            // Display the question received from the backend
+            if (_question != null)
+              Text(
+                'Question: $_question',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
                 itemCount: _memes.length,
                 itemBuilder: (context, index) {
-                  final meme = _memes[index];
-                  return Card(
-                    child: Column(
-                      children: [
-                        Image.network(meme['template']),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(meme['keywords']),
-                        ),
-                      ],
-                    ),
+                  return ListTile(
+                    title: Text(_memes[index]),
                   );
                 },
               ),
