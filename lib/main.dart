@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'drawer.dart';
 
 void main() {
   runApp(MemeApp());
@@ -10,7 +11,7 @@ class MemeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Meme Generator',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -25,6 +26,15 @@ class JokeSearchScreen extends StatefulWidget {
 }
 
 class _JokeSearchScreenState extends State<JokeSearchScreen> {
+  int _selectedIndex = 0;
+
+  void _onBottomNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      // Add navigation logic based on the index if needed
+    });
+  }
+
   TextEditingController _controller = TextEditingController();
   List<String> _memes = []; // Change to List<String> for clarity
   String? _question; // To store the question from the response
@@ -50,8 +60,26 @@ class _JokeSearchScreenState extends State<JokeSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Appdrawer(),
       appBar: AppBar(
-        title: Text('Joke Search'),
+        backgroundColor: Colors.blue,
+        title: Text(
+          'Meme Generation',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme:
+            const IconThemeData(color: Colors.white), // Drawer icon color
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // Implement search functionality here
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -69,13 +97,12 @@ class _JokeSearchScreenState extends State<JokeSearchScreen> {
               onPressed: () {
                 fetchJokes(_controller.text);
               },
-              child: Text('Get Jokes'),
+              child: Text('Generate Memes'),
             ),
             SizedBox(height: 16),
-            // Display the question received from the backend
             if (_question != null)
               Text(
-                'Question: $_question',
+                'Entered Text: $_question',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             SizedBox(height: 8),
@@ -91,6 +118,31 @@ class _JokeSearchScreenState extends State<JokeSearchScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onBottomNavTapped,
+        backgroundColor: Colors.blue,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        iconSize: 30,
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.create),
+            label: 'Create',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Saved',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
