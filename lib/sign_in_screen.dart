@@ -14,7 +14,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  // Handle Sign-In Function
   Future<void> handleSignIn() async {
     try {
       await _authService.signIn(
@@ -22,7 +21,6 @@ class _SignInScreenState extends State<SignInScreen> {
         _passwordController.text.trim(),
       );
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        // If email is verified, navigate to JokeSearchScreen
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Sign-In Successful')),
         );
@@ -31,15 +29,14 @@ class _SignInScreenState extends State<SignInScreen> {
           MaterialPageRoute(builder: (context) => MemeGenerationPage()),
         );
       } else {
-        // If email is not verified
         await FirebaseAuth.instance.signOut();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Please verify your email before logging in.')),
+            content: Text('Please verify your email before logging in.'),
+          ),
         );
       }
     } on FirebaseAuthException catch (e) {
-      // Handle Firebase Authentication errors
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('No user found for this email.')),
@@ -54,7 +51,6 @@ class _SignInScreenState extends State<SignInScreen> {
         );
       }
     } catch (e) {
-      // Handle unexpected errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An unexpected error occurred.')),
       );
@@ -64,48 +60,104 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign In'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.lightBlue],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 8,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Welcome To Meme Generation!',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Sign in to continue',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: handleSignIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 32,
+                        ),
+                      ),
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignUpScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Don't have an account? Sign Up",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true, // Hide password text
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: handleSignIn,
-              child: Text('Sign In'),
-            ),
-            SizedBox(height: 8),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUpScreen()),
-                  );
-                },
-                child: Text("Don't have an account? Sign Up"),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'auth_service.dart';
+import 'sign_in_screen.dart';
 
 class Appdrawer extends StatelessWidget {
   const Appdrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+
     return Drawer(
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text("Keyur Dobariya"),
-            accountEmail: const Text("keyurdobariya@gmail.com"),
+            accountName: Text(user?.displayName ?? "Guest"),
+            accountEmail: Text(user?.email ?? "No Email"),
             currentAccountPicture: CircleAvatar(
-              child: ClipOval(child: Image.asset('images/profile.png')),
+              backgroundColor: Colors.blueAccent,
+              child: Text(
+                user?.displayName != null && user!.displayName!.isNotEmpty
+                    ? user.displayName![0].toUpperCase()
+                    : '?',
+                style: TextStyle(fontSize: 40, color: Colors.white),
+              ),
             ),
             decoration: BoxDecoration(
-                color: Colors.blue,
-                image:
-                    DecorationImage(image: AssetImage("images/profile.png"))),
+              color: Colors.blue,
+              image: DecorationImage(
+                image: AssetImage("images/profile.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           ListTile(
             leading: Icon(Icons.file_upload),
@@ -43,6 +57,15 @@ class Appdrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text("Logout"),
+            onTap: () async {
+              final authService = AuthService();
+              await authService.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => SignInScreen()),
+                (route) => false,
+              );
+            },
           ),
         ],
       ),
